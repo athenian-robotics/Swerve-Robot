@@ -10,27 +10,17 @@ public class Drive extends CommandBase {
     Drivetrain drivetrain;
     XboxController controller;
 
-    public Drive(Drivetrain drivetrain, XboxController controller) { this.drivetrain = drivetrain; this.controller = controller; addRequirements(drivetrain); }
-
-    @Override
-    public void initialize() {
-
-    }
+    public Drive(Drivetrain drivetrain, XboxController controller) {this.drivetrain = drivetrain; this.controller = controller; addRequirements(drivetrain);}
 
     @Override
     public void execute() {
-        double x = controller.getX(GenericHID.Hand.kLeft);
-        double y = controller.getY(GenericHID.Hand.kLeft);
-        drivetrain.drive(x, y, 0.1, true);
+        double x = controller.getX(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
+        double y = controller.getY(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
+        double r = controller.getX(GenericHID.Hand.kRight) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
+        drivetrain.updateOdometry();
+        drivetrain.drive(x, y, r);
     }
 
     @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
+    public void end(boolean interrupted) {drivetrain.drive(0, 0, 0);}
 }

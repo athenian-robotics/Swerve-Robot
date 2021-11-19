@@ -3,30 +3,21 @@ package frc.robot;
 
 public final class Constants {
     public static final class DriveConstants {
-        public static final int frontLeftDrivePort = 0;
-        public static final int frontLeftTurnPort = 0;
-        public static final int frontRightDrivePort = 0;
-        public static final int frontRightTurnPort = 0;
-        public static final int backLeftDrivePort = 0;
-        public static final int backLeftTurnPort = 0;
-        public static final int backRightDrivePort = 0;
-        public static final int backRightTurnPort = 0;
+        public static final int frontLeftDrivePort = 8;
+        public static final int frontLeftTurnPort = 1;
+        public static final int frontRightDrivePort = 2;
+        public static final int frontRightTurnPort = 6;
+        public static final int backLeftDrivePort = 5;
+        public static final int backLeftTurnPort = 3;
+        public static final int backRightDrivePort = 4;
+        public static final int backRightTurnPort = 7;
 
-        public static final int frontLeftTurnEncoderPortA = 0;
-        public static final int frontLeftTurnEncoderPortB = 0;
-        public static final int frontRightTurnEncoderPortA = 0;
-        public static final int frontRightTurnEncoderPortB = 0;
-        public static final int backLeftTurnEncoderPortA = 0;
-        public static final int backLeftTurnEncoderPortB = 0;
-        public static final int backRightTurnEncoderPortA = 0;
-        public static final int backRightTurnEncoderPortB = 0;
+        public static final int frontLeftTurnEncoderPort = 3;
+        public static final int frontRightTurnEncoderPort = 2;
+        public static final int backLeftTurnEncoderPort = 1;
+        public static final int backRightTurnEncoderPort = 4;
 
         public static final double speedScale = 1.0;
-
-        public static final double minimumDrivePower = 0.0;
-        public static final double minimumTurnPower = 0.0;
-        public static final double maximumDrivePower = 1.0;
-        public static final double maximumTurnPower = 1.0;
     }
 
     public static final class AutonomousConstants {
