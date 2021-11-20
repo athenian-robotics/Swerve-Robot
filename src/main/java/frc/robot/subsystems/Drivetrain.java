@@ -5,45 +5,43 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-/**
- * Represents a swerve drive style drivetrain.
- */
+
 public class Drivetrain extends SubsystemBase {
-    public static final double MAX_SPEED = 3.0*Constants.DriveConstants.speedScale; // 3 meters per second
-    public static final double MAX_ANGULAR_SPEED = Math.PI*Constants.DriveConstants.speedScale; // 1/2 rotation per second
+    public static final double MAX_SPEED = 3.0 * speedScale; // 3 meters per second
+    public static final double MAX_ANGULAR_SPEED = Math.PI * speedScale; // 1/2 rotation per second
 
-    private final Translation2d frontLeftLocation = new Translation2d(-0.2925, 0.2925);
-    private final Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
-    private final Translation2d backLeftLocation = new Translation2d(-0.2925, -0.2925);
-    private final Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
+    private final SwerveModule frontLeft;
+    private final SwerveModule frontRight;
+    private final SwerveModule backLeft;
+    private final SwerveModule backRight;
 
-    private final SwerveModule frontLeft = new SwerveModule(frontLeftDrivePort, frontLeftTurnPort, frontLeftTurnEncoderPort);
-    private final SwerveModule frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort);
-    private final SwerveModule backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
-    private final SwerveModule backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
+    private final ADXRS450_Gyro gyro;
 
-    private final AnalogGyro gyro = new AnalogGyro(SPI.Port.kOnboardCS0.value);
+    private final SwerveDriveKinematics kinematics;
+    private final SwerveDriveOdometry odometry;
 
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
+    public Drivetrain() {
+        frontLeft = new SwerveModule(frontLeftDrivePort, frontLeftTurnPort, frontLeftTurnEncoderPort);
+        frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort);
+        backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
+        backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
+        gyro = new ADXRS450_Gyro();
 
-    private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getAngle());
+        Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
+        Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
+        Translation2d backLeftLocation = new Translation2d(-0.2925, -0.2925);
+        Translation2d frontLeftLocation = new Translation2d(-0.2925, 0.2925);
 
-    public Drivetrain()
-    {
-        gyro.reset();
+        kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
+        odometry = new SwerveDriveOdometry(kinematics, getAngle());
     }
 
     /**
@@ -51,10 +49,7 @@ public class Drivetrain extends SubsystemBase {
      *
      * @return The angle of the robot.
      */
-    public Rotation2d getAngle() {
-        // Negating the angle because WPILib gyros are CW positive.
-        return Rotation2d.fromDegrees(-gyro.getAngle());
-    }
+    public Rotation2d getAngle() {return Rotation2d.fromDegrees(-gyro.getAngle());} //Negating the angle because WPILib gyros are CW positive.
 
     /**
      * Method to drive the robot using joystick info.
@@ -65,7 +60,8 @@ public class Drivetrain extends SubsystemBase {
      */
     public void drive(double xSpeed, double ySpeed, double rot) {
         SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle()));
-        SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, MAX_SPEED);
+        SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, MAX_SPEED); //Make sure output values aren't above our max speed
+
         frontLeft.setDesiredState(swerveModuleStates[0]);
         frontRight.setDesiredState(swerveModuleStates[1]);
         backLeft.setDesiredState(swerveModuleStates[2]);
@@ -84,6 +80,4 @@ public class Drivetrain extends SubsystemBase {
                 backRight.getState()
         );
     }
-
-    public SwerveDriveOdometry getOdometry() { return odometry; }
 }

@@ -5,18 +5,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Drivetrain;
 
 
 public class Robot extends TimedRobot {
-    private final XboxController controller = new XboxController(0);
-    private final Drivetrain swerve = new Drivetrain();
-
     RobotContainer robotContainer;
 
     @Override
@@ -29,9 +22,7 @@ public class Robot extends TimedRobot {
      * This function is called once each time the robot enters Disabled mode.
      */
     @Override
-    public void disabledInit() {
-        RobotContainer.disableAll(robotContainer);
-    }
+    public void disabledInit() {RobotContainer.disableAll();}
 
     @Override
     public void disabledPeriodic() {}

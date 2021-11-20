@@ -4,7 +4,7 @@ package frc.robot;
 public final class Constants {
     public static final class DriveConstants {
         public static final int frontLeftDrivePort = 8;
-        public static final int frontLeftTurnPort = 1;
+        public static final int frontLeftTurnPort = 11;
         public static final int frontRightDrivePort = 2;
         public static final int frontRightTurnPort = 6;
         public static final int backLeftDrivePort = 5;

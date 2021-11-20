@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class SwerveModule extends SubsystemBase {
     private static final double WHEEL_RADIUS = 0.041275;
     private static final int ENCODER_RESOLUTION = 2048;
@@ -30,7 +31,6 @@ public class SwerveModule extends SubsystemBase {
     private final DutyCycleEncoder turningEncoder;
 
     private final PIDController drivePIDController = new PIDController(1, 0, 0);
-
     private final ProfiledPIDController turningPIDController
             = new ProfiledPIDController(1, 0, 0,
             new TrapezoidProfile.Constraints(MODULE_MAX_ANGULAR_VELOCITY, MODULE_MAX_ANGULAR_ACCELERATION));
@@ -76,15 +76,11 @@ public class SwerveModule extends SubsystemBase {
      *
      * @param state Desired state with speed and angle.
      */
-    public void setDesiredState(SwerveModuleState state)
-    {
-        // Calculate the drive output from the drive PID controller.
+    public void setDesiredState(SwerveModuleState state) {
+        // Calculate the motor outputs from the PID controllers.
         final var driveOutput = drivePIDController.calculate(driveEncoder.getVelocity(), state.speedMetersPerSecond);
-
-        // Calculate the turning motor output from the turning PID controller.
         final var turnOutput = turningPIDController.calculate(turningEncoder.get(), state.angle.getRadians());
 
-        // Calculate the turning motor output from the turning PID controller.
         driveMotor.set(driveOutput);
         turningMotor.set(turnOutput);
     }
