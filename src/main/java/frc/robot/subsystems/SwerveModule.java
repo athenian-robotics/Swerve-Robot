@@ -77,6 +77,8 @@ public class SwerveModule extends SubsystemBase {
      * @param state Desired state with speed and angle.
      */
     public void setDesiredState(SwerveModuleState state) {
+        state = SwerveModuleState.optimize(state, new Rotation2d(turningEncoder.getDistance())); //never rotate more than 90 degrees :)
+
         // Calculate the motor outputs from the PID controllers.
         final var driveOutput = drivePIDController.calculate(driveEncoder.getVelocity(), state.speedMetersPerSecond);
         final var turnOutput = turningPIDController.calculate(turningEncoder.get(), state.angle.getRadians());

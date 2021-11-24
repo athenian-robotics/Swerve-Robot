@@ -16,7 +16,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {robotContainer = new RobotContainer();}
 
     @Override
-    public void robotPeriodic() {}
+    public void robotPeriodic() {CommandScheduler.getInstance().run();}
 
     /**
      * This function is called once each time the robot enters Disabled mode.
