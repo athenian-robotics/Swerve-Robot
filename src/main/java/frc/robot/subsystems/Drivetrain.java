@@ -15,8 +15,8 @@ import static frc.robot.Constants.DriveConstants.*;
 
 
 public class Drivetrain extends SubsystemBase {
-    public static final double MAX_SPEED = 3.0 * speedScale; // 3 meters per second
-    public static final double MAX_ANGULAR_SPEED = Math.PI * speedScale; // 1/2 rotation per second
+    public static final double MAX_SPEED = speedScale; // 1 meters per second max
+    public static final double MAX_ANGULAR_SPEED = Math.PI * speedScale / 2; // 1/4 rotation per second
 
     private final SwerveModule frontLeft;
     private final SwerveModule frontRight;
@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
      *
      * @return The angle of the robot.
      */
-    public Rotation2d getAngle() {return Rotation2d.fromDegrees(-gyro.getAngle());} //Negating the angle because WPILib gyros are CW positive.
+    public Rotation2d getAngle() {return Rotation2d.fromDegrees(-gyro.getAngle());} //Negating the angle because WPILib gyros are CCW positive.
 
     /**
      * Method to drive the robot using joystick info.

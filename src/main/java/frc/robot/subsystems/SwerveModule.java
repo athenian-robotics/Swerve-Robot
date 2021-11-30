@@ -22,7 +22,7 @@ public class SwerveModule extends SubsystemBase {
     private static final int ENCODER_RESOLUTION = 2048;
 
     private static final double MODULE_MAX_ANGULAR_VELOCITY = Drivetrain.MAX_ANGULAR_SPEED;
-    private static final double MODULE_MAX_ANGULAR_ACCELERATION = 2 * Math.PI; // radians per second squared
+    private static final double MODULE_MAX_ANGULAR_ACCELERATION = Math.PI / 4; // radians per second squared
 
     private final CANSparkMax driveMotor;
     private final CANSparkMax turningMotor;
@@ -30,9 +30,9 @@ public class SwerveModule extends SubsystemBase {
     private final CANEncoder driveEncoder;
     private final DutyCycleEncoder turningEncoder;
 
-    private final PIDController drivePIDController = new PIDController(1, 0, 0);
+    private final PIDController drivePIDController = new PIDController(0.1, 0, 0.05);
     private final ProfiledPIDController turningPIDController
-            = new ProfiledPIDController(1, 0, 0,
+            = new ProfiledPIDController(0.01, 0, 0,
             new TrapezoidProfile.Constraints(MODULE_MAX_ANGULAR_VELOCITY, MODULE_MAX_ANGULAR_ACCELERATION));
 
     /**
@@ -57,7 +57,7 @@ public class SwerveModule extends SubsystemBase {
         // Set the distance (in this case, angle) per pulse for the turning encoder.
         // This is the the angle through an entire rotation (2 * wpi::math::pi)
         // divided by the encoder resolution.
-        turningEncoder.setDistancePerRotation(2 * Math.PI / ENCODER_RESOLUTION);
+        turningEncoder.setDistancePerRotation(2 * Math.PI);
 
         // Limit the PID Controller's input range between -pi and pi and set the input
         // to be continuous.

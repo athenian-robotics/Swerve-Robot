@@ -19,9 +19,9 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-        double x = MathUtil.clamp(controller.getX(GenericHID.Hand.kLeft), 0.02, 1) * Drivetrain.MAX_SPEED; // m/s
-        double y = MathUtil.clamp(controller.getY(GenericHID.Hand.kLeft), 0.02, 1) * Drivetrain.MAX_SPEED; // m/s
-        double r = MathUtil.clamp(controller.getX(GenericHID.Hand.kRight), 0.02, 1) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
+        double x = MathUtil.clamp(controller.getX(GenericHID.Hand.kLeft), 0.1, 1) * Drivetrain.MAX_SPEED; // m/s
+        double y = MathUtil.clamp(controller.getY(GenericHID.Hand.kLeft), 0.1, 1) * Drivetrain.MAX_SPEED; // m/s
+        double r = MathUtil.clamp(controller.getX(GenericHID.Hand.kRight), 0.1, 1) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
 
         drivetrain.updateOdometry();
         drivetrain.drive(x, y, -r); //r is CW and needs to be CCW
