@@ -27,8 +27,8 @@ public class SwerveModule extends SubsystemBase {
     private final CANSparkMax driveMotor;
     private final CANSparkMax turningMotor;
 
-    private final CANEncoder driveEncoder;
-    private final DutyCycleEncoder turningEncoder;
+    public final CANEncoder driveEncoder;
+    public final DutyCycleEncoder turningEncoder;
 
     private final PIDController drivePIDController = new PIDController(0.1, 0, 0.05);
     private final ProfiledPIDController turningPIDController
@@ -86,4 +86,5 @@ public class SwerveModule extends SubsystemBase {
         driveMotor.set(driveOutput);
         turningMotor.set(turnOutput);
     }
+
 }
