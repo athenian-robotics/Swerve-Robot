@@ -34,6 +34,7 @@ public class Drivetrain extends SubsystemBase {
         backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
         backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
         gyro = new ADXRS450_Gyro();
+        gyro.reset();
 
         Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
         Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
