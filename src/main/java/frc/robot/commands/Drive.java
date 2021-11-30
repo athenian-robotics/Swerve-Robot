@@ -19,9 +19,10 @@ public class Drive extends CommandBase {
 
     @Override
     public void execute() {
-        double x = MathUtil.clamp(controller.getX(GenericHID.Hand.kLeft), 0.1, 1) * Drivetrain.MAX_SPEED; // m/s
-        double y = MathUtil.clamp(controller.getY(GenericHID.Hand.kLeft), 0.1, 1) * Drivetrain.MAX_SPEED; // m/s
-        double r = MathUtil.clamp(controller.getX(GenericHID.Hand.kRight), 0.1, 1) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
+        double x = controller.getX(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
+        double y = controller.getY(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
+        double r = controller.getX(GenericHID.Hand.kRight) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
+        x=x<0.02?0:x; y=y<0.02?0:y; r=r<0.02?0:r; //Manual dead zone; if any value is below 0.02 (2% movement) make it 0
 
         drivetrain.updateOdometry();
         drivetrain.drive(x, y, -r); //r is CW and needs to be CCW
