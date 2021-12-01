@@ -30,7 +30,7 @@ public class SwerveModule extends SubsystemBase {
     public final CANEncoder driveEncoder;
     public final DutyCycleEncoder turningEncoder;
 
-    private final PIDController drivePIDController = new PIDController(0.01, 0, 0);
+    private final PIDController drivePIDController = new PIDController(0.003, 0, 0);
     private final ProfiledPIDController turningPIDController
             = new ProfiledPIDController(0.5, 0, 0,
             new TrapezoidProfile.Constraints(MODULE_MAX_ANGULAR_VELOCITY, MODULE_MAX_ANGULAR_ACCELERATION));

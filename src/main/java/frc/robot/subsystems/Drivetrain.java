@@ -6,6 +6,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.*;
@@ -36,8 +37,7 @@ public class Drivetrain extends SubsystemBase {
         frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort);
         backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
         backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
-        gyro = new AHRS();
-        gyro.reset();
+        gyro = new AHRS(I2C.Port.kMXP);
 
         Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
         Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
@@ -74,7 +74,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Gyro", gyro.getAngle());
+        SmartDashboard.putNumber("Gyro", gyro.getPitch());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
         SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.getPositionOffset());
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
