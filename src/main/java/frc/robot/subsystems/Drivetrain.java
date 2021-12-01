@@ -5,44 +5,44 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 import static frc.robot.Constants.DriveConstants.*;
 
-/**
- * Represents a swerve drive style drivetrain.
- */
+
 public class Drivetrain extends SubsystemBase {
-    public static final double MAX_SPEED = 3.0*Constants.DriveConstants.speedScale; // 3 meters per second
-    public static final double MAX_ANGULAR_SPEED = Math.PI*Constants.DriveConstants.speedScale; // 1/2 rotation per second
+    public static final double MAX_SPEED = speedScale; // 1 meters per second max
+    public static final double MAX_ANGULAR_SPEED = Math.PI * speedScale / 2; // 1/4 rotation per second
 
-    private final Translation2d frontLeftLocation = new Translation2d(0.381, 0.381);
-    private final Translation2d frontRightLocation = new Translation2d(0.381, -0.381);
-    private final Translation2d backLeftLocation = new Translation2d(-0.381, 0.381);
-    private final Translation2d backRightLocation = new Translation2d(-0.381, -0.381);
+    private final SwerveModule frontLeft;
+    private final SwerveModule frontRight;
+    private final SwerveModule backLeft;
+    private final SwerveModule backRight;
 
-    private final SwerveModule frontLeft = new SwerveModule(frontLeftDrivePort, frontLeftTurnPort);
-    private final SwerveModule frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort);
-    private final SwerveModule backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort);
-    private final SwerveModule backRight = new SwerveModule(backRightDrivePort, backRightTurnPort);
+    private final ADXRS450_Gyro gyro;
 
-    private final AnalogGyro gyro = new AnalogGyro(SPI.Port.kOnboardCS0.value);
+    private final SwerveDriveKinematics kinematics;
+    private final SwerveDriveOdometry odometry;
 
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
-
-    private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getAngle());
-
-    public Drivetrain()
-    {
+    public Drivetrain() {
+        frontLeft = new SwerveModule(frontLeftDrivePort, frontLeftTurnPort, frontLeftTurnEncoderPort);
+        frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort);
+        backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
+        backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
+        gyro = new ADXRS450_Gyro();
         gyro.reset();
+
+        Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
+        Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
+        Translation2d backLeftLocation = new Translation2d(-0.2925, -0.2925);
+        Translation2d frontLeftLocation = new Translation2d(-0.2925, 0.2925);
+
+        kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
+        odometry = new SwerveDriveOdometry(kinematics, getAngle());
     }
 
     /**
@@ -50,11 +50,7 @@ public class Drivetrain extends SubsystemBase {
      *
      * @return The angle of the robot.
      */
-    public Rotation2d getAngle()
-    {
-        // Negating the angle because WPILib gyros are CW positive.
-        return Rotation2d.fromDegrees(-gyro.getAngle());
-    }
+    public Rotation2d getAngle() {return Rotation2d.fromDegrees(-gyro.getAngle());} //Negating the angle because WPILib gyros are CCW positive.
 
     /**
      * Method to drive the robot using joystick info.
@@ -62,16 +58,11 @@ public class Drivetrain extends SubsystemBase {
      * @param xSpeed        Speed of the robot in the x direction (forward).
      * @param ySpeed        Speed of the robot in the y direction (sideways).
      * @param rot           Angular rate of the robot.
-     * @param fieldRelative Whether the provided x and y speeds are relative to the field.
      */
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative)
-    {
-        var swerveModuleStates = kinematics.toSwerveModuleStates(
-                fieldRelative
-                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle())
-                        : new ChassisSpeeds(xSpeed, ySpeed, rot)
-        );
-        SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, MAX_SPEED);
+    public void drive(double xSpeed, double ySpeed, double rot) {
+        SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getAngle()));
+        SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, MAX_SPEED); //Make sure output values aren't above our max speed
+
         frontLeft.setDesiredState(swerveModuleStates[0]);
         frontRight.setDesiredState(swerveModuleStates[1]);
         backLeft.setDesiredState(swerveModuleStates[2]);
@@ -81,8 +72,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * Updates the field relative position of the robot.
      */
-    public void updateOdometry()
-    {
+    public void updateOdometry() {
         odometry.update(
                 getAngle(),
                 frontLeft.getState(),

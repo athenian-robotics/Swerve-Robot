@@ -5,18 +5,55 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import static frc.robot.subsystems.Drivetrain.MAX_ANGULAR_SPEED;
-import static frc.robot.subsystems.Drivetrain.MAX_SPEED;
 
-public class Robot extends TimedRobot
-{
-    private final XboxController controller = new XboxController(0);
-    private final Drivetrain swerve = new Drivetrain();
+public class Robot extends TimedRobot {
+    RobotContainer robotContainer;
 
-    RobotContainer robotContainer = new RobotContainer();
+    @Override
+    public void robotInit() {robotContainer = new RobotContainer();}
+
+    @Override
+    public void robotPeriodic() {CommandScheduler.getInstance().run();}
+
+    /**
+     * This function is called once each time the robot enters Disabled mode.
+     */
+    @Override
+    public void disabledInit() {RobotContainer.disableAll();}
+
+    @Override
+    public void disabledPeriodic() {}
+
+    /**
+     * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+     */
+    @Override
+    public void autonomousInit() {}
+
+    /**
+     * This function is called periodically during autonomous.
+     */
+    @Override
+    public void autonomousPeriodic() {}
+
+    @Override
+    public void teleopInit() {}
+
+    /**
+     * This function is called periodically during operator control.
+     */
+    @Override
+    public void teleopPeriodic() {}
+
+    @Override
+    public void testInit() {CommandScheduler.getInstance().cancelAll();}
+
+    /**
+     * This function is called periodically during test mode.
+     */
+    @Override
+    public void testPeriodic() {}
 }

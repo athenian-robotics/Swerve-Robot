@@ -45,6 +45,12 @@ test {
     useJUnitPlatform()
 }
 
+
+repositories {
+    mavenCentral()
+}
+
+
 dependencies {
     implementation wpi.deps.wpilib()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
