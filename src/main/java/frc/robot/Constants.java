@@ -17,7 +17,7 @@ public final class Constants {
         public static final int backLeftTurnEncoderPort = 1;
         public static final int backRightTurnEncoderPort = 4;
 
-        public static final double speedScale = 0.5;
+        public static final double speedScale = 1;
     }
 
     public static final class AutonomousConstants {
