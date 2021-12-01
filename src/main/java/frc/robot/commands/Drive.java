@@ -22,10 +22,7 @@ public class Drive extends CommandBase {
         double x = controller.getX(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
         double y = controller.getY(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
         double r = controller.getX(GenericHID.Hand.kRight) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
-
-        x = x < 0.02 ? 0 : x;
-        y = y < 0.02 ? 0 : y; //Manual dead zone; if any value is below 0.02 (2% movement) make it 0
-        r = r < 0.02 ? 0 : r;
+        x=x<0.02?x>-0.02?0:x:x; y=y<0.02?y>-0.02?0:y:y; r=r<0.02?r>-0.02?0:r:r; //Manual dead zone; if any value is below 0.02 (2% movement) make it 0
 
         drivetrain.updateOdometry();
         drivetrain.drive(x, y, -r); //r is CW and needs to be CCW
