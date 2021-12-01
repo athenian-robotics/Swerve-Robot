@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
     private static final double WHEEL_RADIUS = 0.041275;
-    private static final int ENCODER_RESOLUTION = 2048;
+    private static final int ENCODER_RESOLUTION = 4096;
 
     private static final double MODULE_MAX_ANGULAR_VELOCITY = Drivetrain.MAX_ANGULAR_SPEED;
     private static final double MODULE_MAX_ANGULAR_ACCELERATION = Math.PI / 4; // radians per second squared
@@ -51,13 +51,12 @@ public class SwerveModule extends SubsystemBase {
         // Set the distance per pulse for the drive encoder. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
         // resolution.
-        driveEncoder.setMeasurementPeriod(4);
-        driveEncoder.setPositionConversionFactor(2 * Math.PI * WHEEL_RADIUS / 1.6);
+        driveEncoder.setPositionConversionFactor(2 * Math.PI * WHEEL_RADIUS / (7.2 * ENCODER_RESOLUTION));
 
         // Set the distance (in this case, angle) per pulse for the turning encoder.
         // This is the the angle through an entire rotation (2 * wpi::math::pi)
         // divided by the encoder resolution.
-        turningEncoder.setDistancePerRotation(2 * Math.PI);
+        turningEncoder.setDistancePerRotation(2 * Math.PI / 50);
 
         // Limit the PID Controller's input range between -pi and pi and set the input
         // to be continuous.
