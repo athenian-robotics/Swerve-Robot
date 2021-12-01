@@ -74,7 +74,8 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Gyro", gyro.getPitch());
+        SmartDashboard.putNumber("Gyro", gyro.getAngle());
+        SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
         SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.getPositionOffset());
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());

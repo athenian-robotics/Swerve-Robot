@@ -51,7 +51,7 @@ public class SwerveModule extends SubsystemBase {
         // Set the distance per pulse for the drive encoder. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
         // resolution.
-        driveEncoder.setPositionConversionFactor(2 * Math.PI * WHEEL_RADIUS / (7.2 * ENCODER_RESOLUTION));
+        driveEncoder.setPositionConversionFactor(2 * Math.PI * WHEEL_RADIUS / (7.2)); // / (7.2 * ENCODER_RESOLUTION)
 
         // Set the distance (in this case, angle) per pulse for the turning encoder.
         // This is the the angle through an entire rotation (2 * wpi::math::pi)
