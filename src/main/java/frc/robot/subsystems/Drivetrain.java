@@ -5,7 +5,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -37,7 +36,7 @@ public class Drivetrain extends SubsystemBase {
         frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort, frontRightTurnOffset);
         backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort, backLeftTurnOffset);
         backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort, backRightTurnOffset);
-        gyro = new AHRS(SerialPort.Port.kUSB);
+        gyro = new AHRS(SerialPort.Port.kUSB); //If not plugged into the USB (SerialPort.Port.kUSB, and is instead i2c, use I2C.Port.kMXP
 
         Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
         Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
@@ -77,13 +76,13 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.getPositionOffset());
+        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.get());
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.turningEncoder.getPositionOffset());
+        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.turningEncoder.get());
         SmartDashboard.putNumber("Back Left Drive Encoder: ", backLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.turningEncoder.getPositionOffset());
+        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.turningEncoder.get());
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.getPositionOffset());
+        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.get());
     }
 
     /**
