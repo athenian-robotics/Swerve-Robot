@@ -30,7 +30,7 @@ public class SwerveModule extends SubsystemBase {
     public final CANEncoder driveEncoder;
     public final DutyCycleEncoder turningEncoder;
 
-    private final PIDController drivePIDController = new PIDController(0.03, 0, 0);
+    private final PIDController drivePIDController = new PIDController(0.01, 0, 0);
     private final ProfiledPIDController turningPIDController
             = new ProfiledPIDController(0.5, 0, 0,
             new TrapezoidProfile.Constraints(MODULE_MAX_ANGULAR_VELOCITY, MODULE_MAX_ANGULAR_ACCELERATION));
@@ -51,7 +51,7 @@ public class SwerveModule extends SubsystemBase {
         // Set the distance per pulse for the drive encoder. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
         // resolution.
-        driveEncoder.setPositionConversionFactor(ENCODER_RESOLUTION * 2 * Math.PI * WHEEL_RADIUS / 7.2);
+        driveEncoder.setPositionConversionFactor(2 * Math.PI * WHEEL_RADIUS / (7.2 * ENCODER_RESOLUTION));
 
         // Set the distance (in this case, angle) per pulse for the turning encoder.
         // This is the the angle through an entire rotation (2 * wpi::math::pi)
