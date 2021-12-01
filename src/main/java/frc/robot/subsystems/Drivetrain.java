@@ -5,8 +5,8 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.*;
@@ -33,11 +33,11 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveDriveOdometry odometry;
 
     public Drivetrain() {
-        frontLeft = new SwerveModule(frontLeftDrivePort, frontLeftTurnPort, frontLeftTurnEncoderPort);
-        frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort);
-        backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
-        backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
-        gyro = new AHRS(I2C.Port.kMXP);
+        frontLeft = new SwerveModule(frontLeftDrivePort, frontLeftTurnPort, frontLeftTurnEncoderPort, frontLeftTurnOffset);
+        frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort, frontRightTurnOffset);
+        backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort, backLeftTurnOffset);
+        backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort, backRightTurnOffset);
+        gyro = new AHRS(SerialPort.Port.kUSB);
 
         Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
         Translation2d frontRightLocation = new Translation2d(0.2925, -0.2925);
