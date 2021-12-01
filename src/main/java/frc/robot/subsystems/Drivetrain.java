@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.DriveConstants.*;
 
+import com.kauailabs.navx.frc.AHRS;
+
 
 public class Drivetrain extends SubsystemBase {
     public static final double MAX_SPEED = speedScale; // 1 meters per second max
@@ -24,7 +26,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backLeft;
     private final SwerveModule backRight;
 
-    private final ADXRS450_Gyro gyro;
+    private final AHRS gyro;
 
     private final SwerveDriveKinematics kinematics;
     private final SwerveDriveOdometry odometry;
@@ -34,7 +36,7 @@ public class Drivetrain extends SubsystemBase {
         frontRight = new SwerveModule(frontRightDrivePort, frontRightTurnPort, frontRightTurnEncoderPort);
         backLeft = new SwerveModule(backLeftDrivePort, backLeftTurnPort, backLeftTurnEncoderPort);
         backRight = new SwerveModule(backRightDrivePort, backRightTurnPort, backRightTurnEncoderPort);
-        gyro = new ADXRS450_Gyro();
+        gyro = new AHRS();
         gyro.reset();
 
         Translation2d backRightLocation = new Translation2d(0.2925, 0.2925);
