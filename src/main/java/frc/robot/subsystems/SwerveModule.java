@@ -90,8 +90,24 @@ public class SwerveModule extends SubsystemBase {
         final var driveOutput = drivePIDController.calculate(driveEncoder.getVelocity(), state.speedMetersPerSecond);
         final var turnOutput = turningPIDController.calculate(getTurnEncoderAngle(), state.angle.getRadians());
 
+        //driveMotor.set(driveOutput);
+        //turningMotor.set(turnOutput);
+    }
+
+    public void setDriveMotor(double driveOutput) {
         driveMotor.set(driveOutput);
+    }
+
+    public void setTurnMotor(double turnOutput) {
         turningMotor.set(turnOutput);
+    }
+
+    public double getDriveMotorOutput() {
+        return this.driveMotor.get();
+    }
+
+    public double getTurnMotorOutput() {
+        return this.turningMotor.get();
     }
 
 }

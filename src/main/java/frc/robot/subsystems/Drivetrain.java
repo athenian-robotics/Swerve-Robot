@@ -21,10 +21,10 @@ public class Drivetrain extends SubsystemBase {
     public static final double MAX_SPEED = speedScale; // 1 meters per second max
     public static final double MAX_ANGULAR_SPEED = Math.PI * speedScale / 2; // 1/4 rotation per second
 
-    private final SwerveModule frontLeft;
-    private final SwerveModule frontRight;
-    private final SwerveModule backLeft;
-    private final SwerveModule backRight;
+    public final SwerveModule frontLeft;
+    public final SwerveModule frontRight;
+    public final SwerveModule backLeft;
+    public final SwerveModule backRight;
 
     private final AHRS gyro;
 
@@ -71,18 +71,44 @@ public class Drivetrain extends SubsystemBase {
         backRight.setDesiredState(swerveModuleStates[3]);
     }
 
+    public void drive(double driveMotor, double turnMotor) {
+        backRight.setDriveMotor(driveMotor);
+        backLeft.setDriveMotor(driveMotor); // DRIVE MOTOR
+        frontRight.setDriveMotor(driveMotor);
+        frontLeft.setDriveMotor(driveMotor);
+
+        backRight.setTurnMotor(-turnMotor);
+        backLeft.setTurnMotor(-turnMotor); // TURN MOTORS
+        frontRight.setTurnMotor(-turnMotor);
+        frontLeft.setTurnMotor(-turnMotor);
+    }
+
+    public void rotate(double rot) {
+        int rightSign = frontRight.getDriveMotorOutput() < 0 ? 1 : -1;
+        int leftSign = frontLeft.getDriveMotorOutput() < 0 ? 1 : -1;
+
+        if (rot > 0) { // Rotate Right
+            frontRight.setDriveMotor(frontRight.getDriveMotorOutput() * rightSign + 0.05);
+            backRight.setDriveMotor(backRight.getDriveMotorOutput() * rightSign + 0.05);
+        }
+        if (rot < 0 ) { // Rotate Left
+            frontLeft.setDriveMotor(frontLeft.getDriveMotorOutput() * leftSign + 0.05);
+            backLeft.setDriveMotor(backLeft.getDriveMotorOutput() * leftSign + 0.05);
+        }
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.getTurnEncoderAngle()*180/Math.PI);
+        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.getDistance() / (2 * Math.PI) * 360);
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.getTurnEncoderAngle()*180/Math.PI);
+        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.turningEncoder.getDistance() / (2 * Math.PI) * 360); //Radians to degrees
         SmartDashboard.putNumber("Back Left Drive Encoder: ", backLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.getTurnEncoderAngle()*180/Math.PI);
+        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.turningEncoder.getDistance() / (2 * Math.PI) * 360);
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.getTurnEncoderAngle()*180/Math.PI);
+        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.getDistance() / (2 * Math.PI) * 360);
     }
 
     /**
