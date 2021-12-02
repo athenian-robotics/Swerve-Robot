@@ -76,13 +76,13 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.get());
+        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.getTurnEncoderAngle()*180/Math.PI);
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.turningEncoder.get());
+        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.getTurnEncoderAngle()*180/Math.PI);
         SmartDashboard.putNumber("Back Left Drive Encoder: ", backLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.turningEncoder.get());
+        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.getTurnEncoderAngle()*180/Math.PI);
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.get());
+        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.getTurnEncoderAngle()*180/Math.PI);
     }
 
     /**

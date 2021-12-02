@@ -21,7 +21,7 @@ public class SwerveModule extends SubsystemBase {
     private static final double WHEEL_RADIUS = 0.041275;
 
     private static final double MODULE_MAX_ANGULAR_VELOCITY = Drivetrain.MAX_ANGULAR_SPEED;
-    private static final double MODULE_MAX_ANGULAR_ACCELERATION = Math.PI / 4; // radians per second squared
+    private static final double MODULE_MAX_ANGULAR_ACCELERATION = Math.PI / 2; // radians per second squared
 
     private final CANSparkMax driveMotor;
     private final CANSparkMax turningMotor;
@@ -29,9 +29,9 @@ public class SwerveModule extends SubsystemBase {
     public final CANEncoder driveEncoder;
     public final DutyCycleEncoder turningEncoder;
 
-    private final PIDController drivePIDController = new PIDController(0.001, 0, 0);
+    private final PIDController drivePIDController = new PIDController(0.1, 0, 0);
     private final ProfiledPIDController turningPIDController
-            = new ProfiledPIDController(0.5, 0, 0,
+            = new ProfiledPIDController(0.1, 0, 0,
             new TrapezoidProfile.Constraints(MODULE_MAX_ANGULAR_VELOCITY, MODULE_MAX_ANGULAR_ACCELERATION));
 
     private final double turningOffset;
@@ -50,10 +50,14 @@ public class SwerveModule extends SubsystemBase {
         this.turningEncoder = new DutyCycleEncoder(turningEncoderChannel);
         this.turningOffset = turningOffset;
 
+        drivePIDController.setTolerance(0.1);
+        turningPIDController.setTolerance(0.1);
+
         // Set the distance per pulse for the drive encoder. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
         // resolution.
         driveEncoder.setPositionConversionFactor(2 * Math.PI * WHEEL_RADIUS / 7.2); //per rotation, not native units :p (we checked)
+        driveEncoder.setVelocityConversionFactor(2 * Math.PI * WHEEL_RADIUS / 7.2);
 
         // Set the distance (in this case, angle) per pulse for the turning encoder.
         // This is the the angle through an entire rotation (2 * wpi::math::pi)
@@ -65,7 +69,7 @@ public class SwerveModule extends SubsystemBase {
         turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
-    public double getTurnEncoderAngle() {return turningEncoder.getDistance() + turningOffset;}
+    public double getTurnEncoderAngle() {return turningEncoder.getDistance() + turningOffset;} //RADIANS
 
     /**
      * Returns the current state of the module.
