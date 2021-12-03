@@ -71,29 +71,54 @@ public class Drivetrain extends SubsystemBase {
         backRight.setDesiredState(swerveModuleStates[3]);
     }
 
-    public void drive(double driveMotor, double turnMotor) {
-        backRight.setDriveMotor(driveMotor);
-        backLeft.setDriveMotor(driveMotor); // DRIVE MOTOR
-        frontRight.setDriveMotor(driveMotor);
-        frontLeft.setDriveMotor(driveMotor);
+    /**
+     *
+     * @param driveMotorInput Drive Motor Input, scaled from raw left joystick xbox controller values. Drive via y-axis
+     * @param turnMotorInput Turn Motor Input, scaled from raw left joystick xbox controller values. TUrn via x-axis
+     */
+    public void drive(double driveMotorInput, double turnMotorInput) {
+        backRight.setDriveMotor(driveMotorInput);
+        backLeft.setDriveMotor(driveMotorInput); // DRIVE MOTOR
+        frontRight.setDriveMotor(driveMotorInput);
+        frontLeft.setDriveMotor(driveMotorInput);
 
-        backRight.setTurnMotor(-turnMotor);
-        backLeft.setTurnMotor(-turnMotor); // TURN MOTORS
-        frontRight.setTurnMotor(-turnMotor);
-        frontLeft.setTurnMotor(-turnMotor);
+        backRight.setTurnMotor(-turnMotorInput);
+        backLeft.setTurnMotor(-turnMotorInput); // TURN MOTORS
+        frontRight.setTurnMotor(-turnMotorInput); // If not negated, they should be. These were tested and negating all of them allows for proper rotation
+        frontLeft.setTurnMotor(-turnMotorInput);
     }
 
+    /**
+     * UNTESTED (AND PROBABLY INCOMPLETE)
+     * @param rot Rotation Input, scaled from raw right joystick xbox controller data.
+     */
     public void rotate(double rot) {
-        int rightSign = frontRight.getDriveMotorOutput() < 0 ? 1 : -1;
-        int leftSign = frontLeft.getDriveMotorOutput() < 0 ? 1 : -1;
+        int rightSign;
+        int leftSign;
 
-        if (rot > 0) { // Rotate Right
-            frontRight.setDriveMotor(frontRight.getDriveMotorOutput() * rightSign + 0.05);
-            backRight.setDriveMotor(backRight.getDriveMotorOutput() * rightSign + 0.05);
+        if (rot > 0) { // Rotate Right (Right side should be going backwards, while left side should move forwards)
+            rightSign = frontRight.getDriveMotorOutput() < 0 ? 1 : -1; // If the right is already going backwards, leave it.
+            leftSign = frontLeft.getDriveMotorOutput() > 0 ? 1 : -1; // If the left is already going forwards, leave it.
+
+            // Reverse right side
+            frontRight.setDriveMotor(frontRight.getDriveMotorOutput() * rightSign - rot);
+            backRight.setDriveMotor(backRight.getDriveMotorOutput() * rightSign - rot);
+
+            // Forward left side
+            frontLeft.setDriveMotor(frontLeft.getDriveMotorOutput() * leftSign + rot); // Sets the front left to what it already was and just adds rot xbox data
+            backLeft.setDriveMotor(backLeft.getDriveMotorOutput() * leftSign + rot);
         }
-        if (rot < 0 ) { // Rotate Left
-            frontLeft.setDriveMotor(frontLeft.getDriveMotorOutput() * leftSign + 0.05);
-            backLeft.setDriveMotor(backLeft.getDriveMotorOutput() * leftSign + 0.05);
+        if (rot < 0 ) { // Rotate Left (Left side should be going backwards, while right side should move forwards)
+            rightSign = frontRight.getDriveMotorOutput() > 0 ? 1 : -1; // If the right side is already going forwards, leave it.
+            leftSign = frontLeft.getDriveMotorOutput() < 0 ? 1 : -1; // If the left side is already going backwards, leave it.
+
+            // Reverse left side
+            frontLeft.setDriveMotor(frontLeft.getDriveMotorOutput() * leftSign + rot); // Add the rotation since turning left yields negative xbox data
+            backLeft.setDriveMotor(backLeft.getDriveMotorOutput() * leftSign + rot);
+
+            // Forward right side
+            frontRight.setDriveMotor(frontRight.getDriveMotorOutput() * rightSign - rot);
+            backRight.setDriveMotor(backRight.getDriveMotorOutput() * rightSign - rot);
         }
     }
 
