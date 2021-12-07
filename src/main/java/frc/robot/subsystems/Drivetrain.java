@@ -55,7 +55,7 @@ public class Drivetrain extends SubsystemBase {
     public Rotation2d getAngle() {return Rotation2d.fromDegrees(-gyro.getAngle());} //Negating the angle because WPILib gyros are CCW positive.
 
     /**
-     * Method to drive the robot using joystick info.
+     * Method to drive the robot using joystick info (left stick)
      *
      * @param xSpeed        Speed of the robot in the x direction (forward).
      * @param ySpeed        Speed of the robot in the y direction (sideways).
@@ -72,6 +72,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
+     * Method to drive the robot using joystick info without pid or field relative
      *
      * @param driveMotorInput Drive Motor Input, scaled from raw left joystick xbox controller values. Drive via y-axis
      * @param turnMotorInput Turn Motor Input, scaled from raw left joystick xbox controller values. TUrn via x-axis
@@ -89,7 +90,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
-     * UNTESTED (AND PROBABLY INCOMPLETE)
+     * Method to rotate the robot chassis using joystick info (right stick)
+     *
      * @param rot Rotation Input, scaled from raw right joystick xbox controller data.
      */
     public void rotate(double rot) {
@@ -122,45 +124,31 @@ public class Drivetrain extends SubsystemBase {
         }
     }
 
-
+    /**
+     * This method gathers turn encoder data from each swerve module, and "zeroes" out its position, provided it has the correct offset
+     */
     public void zeroWheels() {
-        // Get the turn encoder values and convert from radians to degrees
-        double frontRightAngle = (360 * (frontRight.turningEncoder.getDistance() / (2 * Math.PI) - frontRightTurnOffset)) % 360; // Front Left angle
-        double frontLeftAngle = (360 * (frontLeft.turningEncoder.getDistance() / (2 * Math.PI) - frontLeftTurnOffset)) % 360; // Front Left angle
-        double backRightAngle = (360 * (backRight.turningEncoder.getDistance() / (2 * Math.PI) - backRightTurnOffset)) % 360; // Front Left angle
-        double backLeftAngle = (360 * (backLeft.turningEncoder.getDistance() / (2 * Math.PI) - backLeftTurnOffset)) % 360; // Front Left angle
-
-
-        // Turn each motor on one by one until it gets to our zeroed values. Turn the motor off before continuing on to the next.
-        while (Math.abs(frontRightAngle) > 1) { // FRONT RIGHT ANGLE
-            frontRight.setTurnMotor(0.2);
-            SmartDashboard.putNumber("FR", frontRightAngle);
-            frontRightAngle = (360 * (frontRight.turningEncoder.getDistance() / (2 * Math.PI) - frontRightTurnOffset)) % 360;
-        }
-        frontRight.setTurnMotor(0);
-
-        while (Math.abs(frontLeftAngle) > 1) { // FRONT LEFT ANGLE
-            frontLeft.setTurnMotor(0.2);
-            SmartDashboard.putNumber("FL", frontLeftAngle);
-            frontLeftAngle = (360 * (frontLeft.turningEncoder.getDistance() / (2 * Math.PI) - frontLeftTurnOffset)) % 360;
-        }
-        frontLeft.setTurnMotor(0);
-;
-        while (Math.abs(backLeftAngle) > 1) { // // BACK LEFT
-            backLeft.setTurnMotor(0.2);
-            SmartDashboard.putNumber("BL", backLeftAngle);
-            backLeftAngle = (360 * (backLeft.turningEncoder.getDistance() / (2 * Math.PI) - backLeftTurnOffset)) % 360;
-        }
-        backLeft.setTurnMotor(0);
-
-        while (Math.abs(backRightAngle) > 1) { // BACK RIGHT
-            backRight.setTurnMotor(0.2);
-            SmartDashboard.putNumber("BR", backRightAngle);
-            backRightAngle = (360 * (backRight.turningEncoder.getDistance() / (2 * Math.PI) - backRightTurnOffset)) % 360;
-        }
-        backRight.setTurnMotor(0);
+        SwerveModule[] modules = {frontLeft, frontRight, backLeft, backRight}; // Create a list of all modules
+        for(SwerveModule module: modules) resetSwerveModulePosition(module); // For each module in the list, reset its position
     }
 
+    /**
+     * This method "zeroes" out a singular Swerve Module
+     *
+     * @param module The Swerve Module object to be "zeroed" out (have its position reset)
+     */
+    public void resetSwerveModulePosition(SwerveModule module) {
+        double moduleAngle = (module.getTurnEncoderAngleDegrees() - module.getTurningOffset()) % 360; // Gather the turn encoder in angles & subtract the offset to get how far away from zero
+        while (Math.abs(moduleAngle) > 1) { // While it's within one degree of error . . .
+            module.setTurnMotor(0.2); // Turn the motor on
+            moduleAngle = (module.getTurnEncoderAngleDegrees() - module.getTurningOffset()) % 360; // Reset the angle reading
+        }
+        module.setTurnMotor(0); // Disable the motor once finished
+    }
+
+    /**
+     * This method is repeatedly called, and is native to SubsystemBase. See parent class for more information.
+     */
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
@@ -174,6 +162,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
         SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.getDistance() / (2 * Math.PI) * 360 % 360);
     }
+
     /**
      * Updates the field relative position of the robot.
      */

@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 public class SwerveModule extends SubsystemBase {
     private static final double WHEEL_RADIUS = 0.041275;
 
@@ -60,7 +59,7 @@ public class SwerveModule extends SubsystemBase {
         driveEncoder.setVelocityConversionFactor(2 * Math.PI * WHEEL_RADIUS / 7.2);
 
         // Set the distance (in this case, angle) per pulse for the turning encoder.
-        // This is the the angle through an entire rotation (2 * wpi::math::pi)
+        // This is the angle through an entire rotation (2 * wpi::math::pi)
         // divided by the encoder resolution.
         turningEncoder.setDistancePerRotation(Math.PI);
 
@@ -110,4 +109,7 @@ public class SwerveModule extends SubsystemBase {
         return this.turningMotor.get();
     }
 
+    public double getTurningOffset() { return this.turningOffset; }
+
+    public double getTurnEncoderAngleDegrees() { return (this.turningEncoder.getDistance() / (2 * Math.PI)); }
 }
