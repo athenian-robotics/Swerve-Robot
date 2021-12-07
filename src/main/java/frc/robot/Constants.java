@@ -13,10 +13,10 @@ public final class Constants {
         public static final int backRightTurnPort = 7;
 
         // The degrees in which the physical position of the motors are zeroed out.
-        public static final double frontLeftTurnOffset = 447.3;
-        public static final double frontRightTurnOffset = 343.5;
-        public static final double backLeftTurnOffset = 421.3;
-        public static final double backRightTurnOffset = 520.5;
+        public static final double frontLeftTurnOffset = 87.28; // ZERO: -92.7
+        public static final double frontRightTurnOffset = 73.92; // ZERO: 73.9
+        public static final double backLeftTurnOffset = 240.98; // ZERO: 60.9
+        public static final double backRightTurnOffset = 159.13; // ZERO: 159.1
 
         public static final int frontLeftTurnEncoderPort = 3;
         public static final int frontRightTurnEncoderPort = 4;

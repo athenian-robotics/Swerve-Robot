@@ -47,7 +47,7 @@ public class Drive extends CommandBase {
 
         r = Math.min(r, 0.5); // TODO THIS IS SOLELY SO DRIVETRAIN.ROTATE DOESN'T GO TOO HARD WHEN TESTING
 
-        drivetrain.drive(y, x); // A new, raw input & zero pid loops drive function.
+        drivetrain.drive(-y, x); // A new, raw input & zero pid loops drive function.
         //drivetrain.rotate(r); // TODO PLEASE TEST AND PROOF THIS FOR THE LOVE OF GOD DON'T BREAK ANOTHER CHAIN
 
         // drivetrain.drive(x, y, -r); // OLD DRIVE FUNCTION (PID CONTROLLED) r is CW and needs to be CCW

@@ -138,10 +138,10 @@ public class Drivetrain extends SubsystemBase {
      * @param module The Swerve Module object to be "zeroed" out (have its position reset)
      */
     public void resetSwerveModulePosition(SwerveModule module) {
-        double moduleAngle = (module.getTurnEncoderAngleDegrees() - module.getTurningOffset()) % 360; // Gather the turn encoder in angles & subtract the offset to get how far away from zero
-        while (Math.abs(moduleAngle) > 1) { // While it's within one degree of error . . .
-            module.setTurnMotor(0.2); // Turn the motor on
-            moduleAngle = (module.getTurnEncoderAngleDegrees() - module.getTurningOffset()) % 360; // Reset the angle reading
+        double moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset(); // Gather the turn encoder in angles & subtract the offset to get how far away from zero
+        while (Math.abs(moduleAngle) > .8) { // While it's within one degree of error . . .
+            if(module.getIdentifier() < 3) module.setTurnMotor(-0.5); else module.setTurnMotor(0.5); // Turn the motor on
+            moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset(); // Reset the angle reading
         }
         module.setTurnMotor(0); // Disable the motor once finished
     }
@@ -154,13 +154,13 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.getDistance() / (2 * Math.PI) * 360 % 360);
+        SmartDashboard.putNumber("Front Left Turning Encoder: ", (360 * (frontLeft.turningEncoder.getDistance() / (2 * Math.PI))) % 360);
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.turningEncoder.getDistance() / (2 * Math.PI) * 360 % 360); //Radians to degrees
+        SmartDashboard.putNumber("Front Right Turning Encoder: ", (360 * (frontRight.turningEncoder.getDistance() / (2 * Math.PI))) % 360); //Radians to degrees
         SmartDashboard.putNumber("Back Left Drive Encoder: ", backLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.turningEncoder.getDistance() / (2 * Math.PI) * 360 % 360);
+        SmartDashboard.putNumber("Back Left Turning Encoder: ", (360 * (backLeft.turningEncoder.getDistance() / (2 * Math.PI))) % 360);
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.getDistance() / (2 * Math.PI) * 360 % 360);
+        SmartDashboard.putNumber("Back Right Turning Encoder: ", (360 * (backRight.turningEncoder.getDistance() / (2 * Math.PI))) % 360);
     }
 
     /**
