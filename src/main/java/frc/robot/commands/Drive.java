@@ -45,7 +45,7 @@ public class Drive extends CommandBase {
         y = y < 0.1 ? y >- 0.1 ? 0 : y : y; //Manual dead zone; if any value is below 0.1 (10% movement) make it 0
         r = r < 0.1 ? r >- 0.1 ? 0 : r : r;
 
-        r = Math.min(r, 0.5); // TODO THIS IS SOLELY SO DRIVETRAIN.ROTATE DOESN'T GO TOO HARD WHEN TESTING
+        //r = Math.min(r, 0.05); // TODO THIS IS SOLELY SO DRIVETRAIN.ROTATE DOESN'T GO TOO HARD WHEN TESTING
 
         drivetrain.drive(-y, x); // A new, raw input & zero pid loops drive function.
         //drivetrain.rotate(r); // TODO PLEASE TEST AND PROOF THIS FOR THE LOVE OF GOD DON'T BREAK ANOTHER CHAIN
