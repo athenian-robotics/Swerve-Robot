@@ -40,12 +40,13 @@ public class Drive extends CommandBase {
     public void execute() {
         double x = controller.getX(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
         double y = controller.getY(GenericHID.Hand.kLeft) * Drivetrain.MAX_SPEED; // m/s
-        double r = controller.getX(GenericHID.Hand.kRight) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
+        double r = controller.getX(GenericHID.Hand.kRight) * Drivetrain.MAX_SPEED; // m/s Although we are rotating, drive motors are utilized to accomplish this
+        //double r = controller.getX(GenericHID.Hand.kRight) * Drivetrain.MAX_ANGULAR_SPEED; // rad/s
         x = x < 0.1 ? x >- 0.1 ? 0 : x : x;
         y = y < 0.1 ? y >- 0.1 ? 0 : y : y; //Manual dead zone; if any value is below 0.1 (10% movement) make it 0
         r = r < 0.1 ? r >- 0.1 ? 0 : r : r;
 
-        //r = Math.min(r, 0.05); // TODO THIS IS SOLELY SO DRIVETRAIN.ROTATE DOESN'T GO TOO HARD WHEN TESTING
+        r = Math.min(r, 0.5); // TODO THIS IS SOLELY SO DRIVETRAIN.ROTATE DOESN'T GO TOO HARD WHEN TESTING
 
         drivetrain.drive(-y, x); // A new, raw input & zero pid loops drive function.
         //drivetrain.rotate(r); // TODO PLEASE TEST AND PROOF THIS FOR THE LOVE OF GOD DON'T BREAK ANOTHER CHAIN
@@ -55,6 +56,8 @@ public class Drive extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {drivetrain.drive(0, 0, 0);}
-
+    public void end(boolean interrupted) {
+        drivetrain.drive(0, 0);
+        //drivetrain.drive(0, 0, 0);}
+    }
 }

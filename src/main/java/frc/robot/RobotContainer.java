@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Drive;
+import frc.robot.commands.resetAllWheelPositions;
 import frc.robot.subsystems.Drivetrain;
 
 
@@ -30,17 +31,10 @@ public class RobotContainer {
      */
     public RobotContainer() {
         SmartDashboard.putData("AutoChooser", chooser);
-//        chooser.setDefaultOption("0: CrossLine", new AutoRoutine0(drivetrain));
-//        chooser.addOption("1: ShootPreloadsStraight", new AutoRoutine1(drivetrain, shooterSubsystem, intakeSubsystem));
-//        chooser.addOption("2: ShootPreloadsTurn", new AutoRoutine2(drivetrain, shooterSubsystem, intakeSubsystem));
-//        chooser.addOption("3: GrabTwoStraightShoot", new AutoRoutine3(drivetrain, shooterSubsystem, intakeSubsystem));
-//        chooser.addOption("4: GrabTwoTrenchShoot", new AutoRoutine4(drivetrain, shooterSubsystem, intakeSubsystem));
-//        chooser.addOption("5: DriveForwardTrench", new AutoRoutine5(drivetrain, intakeSubsystem));
 
         xboxController = new XboxController(Constants.OIConstants.xboxControllerPort);
         drivetrain = new Drivetrain();
         drivetrain.setDefaultCommand(new Drive(drivetrain, xboxController));
-//        ledSubsystem.setDefaultCommand(new LEDCommand(ledSubsystem));
 
         buttonSetup();
         configureButtonBindings();
@@ -68,7 +62,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-
+        xboxA.whenPressed(new resetAllWheelPositions(drivetrain));
     }
 
     /**
