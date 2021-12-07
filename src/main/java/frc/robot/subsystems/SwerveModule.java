@@ -62,7 +62,7 @@ public class SwerveModule extends SubsystemBase {
         // Set the distance (in this case, angle) per pulse for the turning encoder.
         // This is the the angle through an entire rotation (2 * wpi::math::pi)
         // divided by the encoder resolution.
-        turningEncoder.setDistancePerRotation(2 * Math.PI / 2);
+        turningEncoder.setDistancePerRotation(Math.PI);
 
         // Limit the PID Controller's input range between -pi and pi and set the input
         // to be continuous.

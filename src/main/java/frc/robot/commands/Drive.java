@@ -33,7 +33,7 @@ public class Drive extends CommandBase {
 
     @Override
     public void initialize() {
-        zeroWheels(); // Zero out all wheels before allowing motors to turn and drive
+        drivetrain.zeroWheels();
     }
 
     @Override
@@ -57,21 +57,4 @@ public class Drive extends CommandBase {
     @Override
     public void end(boolean interrupted) {drivetrain.drive(0, 0, 0);}
 
-    public void zeroWheels() {
-        // Get the turn encoder values and convert from radians to degrees
-        double frontLeftAngle = drivetrain.frontLeft.turningEncoder.getDistance() / (2 * Math.PI) * 360 - frontLeftTurnOffset; // Front Left angle
-        double frontRightAngle = drivetrain.frontRight.turningEncoder.getDistance() / (2 * Math.PI) * 360 - frontRightTurnOffset; // Front Right angle
-        double backLeftAngle = drivetrain.backLeft.turningEncoder.getDistance() / (2 * Math.PI) * 360 - backLeftTurnOffset; // Back Left angle
-        double backRightAngle = drivetrain.backRight.turningEncoder.getDistance() / (2 * Math.PI) * 360 - backRightTurnOffset; // Back Right angle
-
-        // Turn each motor on one by one until it gets to our zeroed values. Turn the motor off before continuing on to the next.
-        while (Math.abs(frontLeftAngle) > 2) {drivetrain.frontLeft.setTurnMotor(0.05);}
-        frontLeft.setTurnMotor(0);
-        while (Math.abs(frontRightAngle) > 2) {drivetrain.frontRight.setTurnMotor(0.05);}
-        frontRight.setTurnMotor(0);
-        while (Math.abs(backLeftAngle) > 2) {drivetrain.backLeft.setTurnMotor(0.05);}
-        backLeft.setTurnMotor(0);
-        while (Math.abs(backRightAngle) > 2) {drivetrain.backRight.setTurnMotor(0.05);}
-        backRight.setTurnMotor(0);
-    }
 }
