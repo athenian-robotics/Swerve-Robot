@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Drive;
+import frc.robot.commands.ResetEncoderZeroes;
 import frc.robot.commands.ResetWheelPositions;
-import frc.robot.commands.TurnWheelsToDegrees;
 import frc.robot.subsystems.Drivetrain;
 
 
@@ -64,7 +64,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         xboxA.whenPressed(new ResetWheelPositions(drivetrain));
-        xboxB.whenPressed(new TurnWheelsToDegrees(drivetrain));
+        xboxB.whenPressed(new ResetEncoderZeroes(drivetrain));
     }
 
     /**

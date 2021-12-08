@@ -130,15 +130,39 @@ public class Drivetrain extends SubsystemBase {
      * @param deg The target in degrees
      */
     public void turnWheelsToDegrees(SwerveModule module, double deg) {
-        int sign = Math.abs(360 - deg) > 180 ? -1 : 1; // Optimize motor direction
+        int sign;
+        if(deg != 0) {sign = Math.abs(360 - deg) > 180 ? -1 : 1; }
+        else {sign = 1; }// Optimize motor direction
 
-        double moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset() + deg;
-        while (Math.abs(moduleAngle) > 0.2) { // While it's outside 0.2 degree of error . . .
-            module.setTurnMotor(0.5 * sign); // Turn the motor on
-            moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset() + deg; // Reset the angle reading
+        double moduleAngle = module.turningEncoder.get() +  deg;
+        while (Math.abs(moduleAngle) >  0.002) { // While it's outside 0.2 degree of error . . .
+            if (moduleAngle > 0) {module.setTurnMotor(-0.5 * sign);} else {module.setTurnMotor(0.5 * sign);}// Turn the motor on
+            moduleAngle = module.turningEncoder.get() + deg; // Reset the angle reading
+            SmartDashboard.putNumber("FML", moduleAngle);
         }
         module.setTurnMotor(0); // Disable the motor once finished
     }
+    /*
+    public void resetAllWheels() {
+        double FL = (360 * frontLeft.getTurnEncoderAngleDegrees()) % 360  - frontLeft.getTurningOffset();
+        double FR = (360 * frontRight.getTurnEncoderAngleDegrees()) % 360  - frontRight.getTurningOffset();
+        double BL = (360 * backLeft.getTurnEncoderAngleDegrees()) % 360  - backLeft.getTurningOffset();
+        double BR = (360 * backRight.getTurnEncoderAngleDegrees()) % 360  - backRight.getTurningOffset();
+
+        while (Math.abs(FL) > 0.2 || Math.abs(FR) > 0.2 || Math.abs(BL) > 0.2 || Math.abs(BR) > 0.2) {
+            if (!(Math.abs(FL) > 0.2)) frontLeft.setTurnMotor(0); else { frontLeft.setTurnMotor(0.5); }
+            if (!(Math.abs(FR) > 0.2)) frontRight.setTurnMotor(0); else { frontRight.setTurnMotor(0.5); }
+            if (!(Math.abs(BL) > 0.2)) backLeft.setTurnMotor(0); else {  backLeft.setTurnMotor(0.5); }
+            if (!(Math.abs(BR) > 0.2)) backRight.setTurnMotor(0); else {  backRight.setTurnMotor(0.5); }
+
+            FL = (360 * frontLeft.getTurnEncoderAngleDegrees()) % 360  - frontLeft.getTurningOffset();
+            FR = (360 * frontRight.getTurnEncoderAngleDegrees()) % 360  - frontRight.getTurningOffset();
+            BL = (360 * backLeft.getTurnEncoderAngleDegrees()) % 360  - backLeft.getTurningOffset();
+            BR = (360 * backRight.getTurnEncoderAngleDegrees()) % 360  - backRight.getTurningOffset();
+        }
+    }
+
+     */
 
     /**
      * This method is repeatedly called, and is native to SubsystemBase. See parent class for more information.
@@ -148,13 +172,13 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Left Turning Encoder: ", (360 * (frontLeft.turningEncoder.getDistance() / (2 * Math.PI))));
+        SmartDashboard.putNumber("Front Left Turning Encoder: ", frontLeft.turningEncoder.get());
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Right Turning Encoder: ", (360 * (frontRight.turningEncoder.getDistance() / (2 * Math.PI)))); //Radians to degrees
+        SmartDashboard.putNumber("Front Right Turning Encoder: ", frontRight.turningEncoder.get()); //Radians to degrees
         SmartDashboard.putNumber("Back Left Drive Encoder: ", backLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Left Turning Encoder: ", (360 * (backLeft.turningEncoder.getDistance() / (2 * Math.PI))));
+        SmartDashboard.putNumber("Back Left Turning Encoder: ", backLeft.turningEncoder.get());
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Right Turning Encoder: ", (360 * (backRight.turningEncoder.getDistance() / (2 * Math.PI))));
+        SmartDashboard.putNumber("Back Right Turning Encoder: ", backRight.turningEncoder.get());
     }
 
     /**

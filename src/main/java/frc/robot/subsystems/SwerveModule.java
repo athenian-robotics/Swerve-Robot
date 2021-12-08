@@ -112,4 +112,6 @@ public class SwerveModule extends SubsystemBase {
     public double getTurningOffset() { return this.turningOffset; }
 
     public double getTurnEncoderAngleDegrees() { return (this.turningEncoder.getDistance() / (2 * Math.PI)); }
+
+    public int getTurnEncoderChannel() { return this.turningEncoder.getSourceChannel(); }
 }
