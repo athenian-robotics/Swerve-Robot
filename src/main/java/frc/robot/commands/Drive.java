@@ -33,7 +33,7 @@ public class Drive extends CommandBase {
 
     @Override
     public void initialize() {
-        drivetrain.zeroWheels();
+        // drivetrain.zeroWheels();
     }
 
     @Override

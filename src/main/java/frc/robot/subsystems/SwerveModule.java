@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveModule extends SubsystemBase {
-    private int identifier;
     private static final double WHEEL_RADIUS = 0.041275;
 
     private static final double MODULE_MAX_ANGULAR_VELOCITY = Drivetrain.MAX_ANGULAR_SPEED;
@@ -43,7 +42,6 @@ public class SwerveModule extends SubsystemBase {
      * @param turningMotorChannel ID for the turning motor.
      */
     public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningEncoderChannel, double turningOffset) {
-        this.identifier = turningEncoderChannel;
         driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
         turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
@@ -101,10 +99,6 @@ public class SwerveModule extends SubsystemBase {
 
     public void setTurnMotor(double turnOutput) {
         turningMotor.set(turnOutput);
-    }
-
-    public int getIdentifier() {
-        return this.identifier;
     }
 
     public double getDriveMotorOutput() {

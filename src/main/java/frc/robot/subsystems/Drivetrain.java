@@ -139,7 +139,7 @@ public class Drivetrain extends SubsystemBase {
      */
     public void resetSwerveModulePosition(SwerveModule module) {
         double moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset(); // Gather the turn encoder in angles & subtract the offset to get how far away from zero
-        while (Math.abs(moduleAngle) > .8) { // While it's within one degree of error . . .
+        while (Math.abs(moduleAngle) > .2) { // While it's within one degree of error . . .
             module.setTurnMotor(0.5); // Turn the motor on
             moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset(); // Reset the angle reading
         }
