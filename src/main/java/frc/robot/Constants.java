@@ -16,7 +16,7 @@ public final class Constants {
         public static final double frontLeftTurnOffset = 81.19; // ZERO: 86.19
         public static final double frontRightTurnOffset = 69.62; // ZERO: 74.62
         public static final double backLeftTurnOffset = 55.76; // ZERO: 60.76
-        public static final double backRightTurnOffset = 334.64; // ZERO: 339.64
+        public static final double backRightTurnOffset = 339.64; // ZERO: 339.64
 
         public static final int frontLeftTurnEncoderPort = 3;
         public static final int frontRightTurnEncoderPort = 4;

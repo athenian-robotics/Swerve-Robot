@@ -125,23 +125,17 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
-     * This method gathers turn encoder data from each swerve module, and "zeroes" out its position, provided it has the correct offset
+     * This method, utilizing offsets and the current wheel position in degrees, turns all wheels to a specified angle. 0 for reset.
+     * @param module The swerve module to adjust
+     * @param deg The target in degrees
      */
-    public void zeroWheels() {
-        SwerveModule[] modules = {frontLeft, frontRight, backLeft, backRight}; // Create a list of all modules
-        for(SwerveModule module: modules) resetSwerveModulePosition(module); // For each module in the list, reset its position
-    }
+    public void turnWheelsToDegrees(SwerveModule module, double deg) {
+        int sign = Math.abs(360 - deg) > 180 ? -1 : 1; // Optimize motor direction
 
-    /**
-     * This method "zeroes" out a singular Swerve Module
-     *
-     * @param module The Swerve Module object to be "zeroed" out (have its position reset)
-     */
-    public void resetSwerveModulePosition(SwerveModule module) {
-        double moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset(); // Gather the turn encoder in angles & subtract the offset to get how far away from zero
-        while (Math.abs(moduleAngle) > .2) { // While it's within one degree of error . . .
-            module.setTurnMotor(0.5); // Turn the motor on
-            moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset(); // Reset the angle reading
+        double moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset() + deg;
+        while (Math.abs(moduleAngle) > 0.2) { // While it's outside 0.2 degree of error . . .
+            module.setTurnMotor(0.5 * sign); // Turn the motor on
+            moduleAngle = (360 * (module.getTurnEncoderAngleDegrees())) % 360 - module.getTurningOffset() + deg; // Reset the angle reading
         }
         module.setTurnMotor(0); // Disable the motor once finished
     }
@@ -154,13 +148,13 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putBoolean("Gyro Connection", gyro.isConnected());
         SmartDashboard.putNumber("Front Left Drive Encoder: ", frontLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Left Turning Encoder: ", (360 * (frontLeft.turningEncoder.getDistance() / (2 * Math.PI))) % 360);
+        SmartDashboard.putNumber("Front Left Turning Encoder: ", (360 * (frontLeft.turningEncoder.getDistance() / (2 * Math.PI))));
         SmartDashboard.putNumber("Front Right Drive Encoder: ", frontRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Front Right Turning Encoder: ", (360 * (frontRight.turningEncoder.getDistance() / (2 * Math.PI))) % 360); //Radians to degrees
+        SmartDashboard.putNumber("Front Right Turning Encoder: ", (360 * (frontRight.turningEncoder.getDistance() / (2 * Math.PI)))); //Radians to degrees
         SmartDashboard.putNumber("Back Left Drive Encoder: ", backLeft.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Left Turning Encoder: ", (360 * (backLeft.turningEncoder.getDistance() / (2 * Math.PI))) % 360);
+        SmartDashboard.putNumber("Back Left Turning Encoder: ", (360 * (backLeft.turningEncoder.getDistance() / (2 * Math.PI))));
         SmartDashboard.putNumber("Back Right Drive Encoder: ", backRight.driveEncoder.getPosition());
-        SmartDashboard.putNumber("Back Right Turning Encoder: ", (360 * (backRight.turningEncoder.getDistance() / (2 * Math.PI))) % 360);
+        SmartDashboard.putNumber("Back Right Turning Encoder: ", (360 * (backRight.turningEncoder.getDistance() / (2 * Math.PI))));
     }
 
     /**
